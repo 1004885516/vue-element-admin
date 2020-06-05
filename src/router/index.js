@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-/* Layout */
 import Layout from '@/layout'
 
 export const constantRoutes = [
@@ -53,42 +52,38 @@ export const constantRoutes = [
   }
 ]
 
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
 export const asyncRoutes = [
   {
-    path: '/error',
+    path: '/book',
+    name: 'book',
     component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: 'Error Pages',
-      icon: '404'
-    },
+    meta: { title: '图书馆', icon: 'documentation' },
     children: [
       {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
+        name: 'bookcreate',
+        path: '/book/create',
+        component: () => import('@/views/book/create'),
+        meta: { title: '加入书架', icon: 'edit', roles: ['admin'] }
       },
       {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
+        name: 'bookedit',
+        path: '/book/edit',
+        component: () => import('@/views/book/edit'),
+        hidden: true,
+        meta: { title: '编辑图书', icon: 'edit', roles: ['admin'], activeMenu: '/book/list' }
+      },
+      {
+        name: 'booklist',
+        path: '/book/list',
+        component: () => import('@/views/book/list'),
+        meta: { title: '图书列表', icon: 'list', roles: ['editor'] }
       }
     ]
   },
-
-  // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
@@ -96,7 +91,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
+export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
