@@ -2,23 +2,25 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    url: '/login/api',
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+// axios get请求 params接收参数，post data接收
+
+export function getInfo(params) {
   return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
+    url: '/user/api',
+    method: 'post',
+    data: params
   })
 }
 
 export function logout() {
   return request({
-    url: '/vue-element-admin/user/logout',
+    url: '/user/logout',
     method: 'post'
   })
 }
