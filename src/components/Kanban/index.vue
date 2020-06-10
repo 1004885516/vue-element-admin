@@ -3,13 +3,13 @@
     <div class="board-column-header">
       {{ headerText }}
     </div>
-    <draggable
-      :list="list"
-      v-bind="$attrs"
-      class="board-column-content"
-      :set-data="setData"
-    >
-      <div v-for="element in list" :key="element.id" class="board-item">
+    <draggable :list="list"
+               v-bind="$attrs"
+               class="board-column-content"
+               :set-data="setData">
+      <div v-for="element in list"
+           :key="element.id"
+           class="board-item">
         {{ element.name }} {{ element.id }}
       </div>
     </draggable>
@@ -31,19 +31,19 @@ export default {
     },
     options: {
       type: Object,
-      default() {
+      default () {
         return {}
       }
     },
     list: {
       type: Array,
-      default() {
+      default () {
         return []
       }
     }
   },
   methods: {
-    setData(dataTransfer) {
+    setData (dataTransfer) {
       // to avoid Firefox bug
       // Detail see : https://github.com/RubaXa/Sortable/issues/1012
       dataTransfer.setData('Text', '')

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function login (data) {
   return request({
     url: '/login/api',
     method: 'post',
@@ -10,7 +10,7 @@ export function login(data) {
 
 // axios get请求 params接收参数，post data接收
 
-export function getInfo(params) {
+export function getInfo (params) {
   return request({
     url: '/user/api',
     method: 'post',
@@ -18,7 +18,7 @@ export function getInfo(params) {
   })
 }
 
-export function logout() {
+export function logout () {
   return request({
     url: '/user/logout',
     method: 'post'

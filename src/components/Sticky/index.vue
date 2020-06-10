@@ -1,9 +1,7 @@
 <template>
   <div :style="{height:height+'px',zIndex:zIndex}">
-    <div
-      :class="className"
-      :style="{top:(isSticky ? stickyTop +'px' : ''),zIndex:zIndex,position:position,width:width,height:height+'px'}"
-    >
+    <div :class="className"
+         :style="{top:(isSticky ? stickyTop +'px' : ''),zIndex:zIndex,position:position,width:width,height:height+'px'}">
       <slot>
         <div>sticky</div>
       </slot>
@@ -28,7 +26,7 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     return {
       active: false,
       position: '',
@@ -37,20 +35,20 @@ export default {
       isSticky: false
     }
   },
-  mounted() {
+  mounted () {
     this.height = this.$el.getBoundingClientRect().height
     window.addEventListener('scroll', this.handleScroll)
     window.addEventListener('resize', this.handleResize)
   },
-  activated() {
+  activated () {
     this.handleScroll()
   },
-  destroyed() {
+  destroyed () {
     window.removeEventListener('scroll', this.handleScroll)
     window.removeEventListener('resize', this.handleResize)
   },
   methods: {
-    sticky() {
+    sticky () {
       if (this.active) {
         return
       }
@@ -59,19 +57,19 @@ export default {
       this.width = this.width + 'px'
       this.isSticky = true
     },
-    handleReset() {
+    handleReset () {
       if (!this.active) {
         return
       }
       this.reset()
     },
-    reset() {
+    reset () {
       this.position = ''
       this.width = 'auto'
       this.active = false
       this.isSticky = false
     },
-    handleScroll() {
+    handleScroll () {
       const width = this.$el.getBoundingClientRect().width
       this.width = width || 'auto'
       const offsetTop = this.$el.getBoundingClientRect().top
@@ -81,7 +79,7 @@ export default {
       }
       this.handleReset()
     },
-    handleResize() {
+    handleResize () {
       if (this.isSticky) {
         this.width = this.$el.getBoundingClientRect().width + 'px'
       }

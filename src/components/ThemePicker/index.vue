@@ -1,10 +1,8 @@
 <template>
-  <el-color-picker
-    v-model="theme"
-    :predefine="['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d', ]"
-    class="theme-picker"
-    popper-class="theme-picker-dropdown"
-  />
+  <el-color-picker v-model="theme"
+                   :predefine="['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d', ]"
+                   class="theme-picker"
+                   popper-class="theme-picker-dropdown" />
 </template>
 
 <script>
@@ -12,25 +10,25 @@ const version = require('element-ui/package.json').version // element-ui version
 const ORIGINAL_THEME = '#409EFF' // default color
 
 export default {
-  data() {
+  data () {
     return {
       chalk: '', // content of theme-chalk css
       theme: ''
     }
   },
   computed: {
-    defaultTheme() {
+    defaultTheme () {
       return this.$store.state.settings.theme
     }
   },
   watch: {
     defaultTheme: {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         this.theme = val
       },
       immediate: true
     },
-    async theme(val) {
+    async theme (val) {
       const oldVal = this.chalk ? this.theme : ORIGINAL_THEME
       if (typeof val !== 'string') return
       const themeCluster = this.getThemeCluster(val.replace('#', ''))
@@ -87,7 +85,7 @@ export default {
   },
 
   methods: {
-    updateStyle(style, oldCluster, newCluster) {
+    updateStyle (style, oldCluster, newCluster) {
       let newStyle = style
       oldCluster.forEach((color, index) => {
         newStyle = newStyle.replace(new RegExp(color, 'ig'), newCluster[index])
@@ -95,7 +93,7 @@ export default {
       return newStyle
     },
 
-    getCSSString(url, variable) {
+    getCSSString (url, variable) {
       return new Promise(resolve => {
         const xhr = new XMLHttpRequest()
         xhr.onreadystatechange = () => {
@@ -109,7 +107,7 @@ export default {
       })
     },
 
-    getThemeCluster(theme) {
+    getThemeCluster (theme) {
       const tintColor = (color, tint) => {
         let red = parseInt(color.slice(0, 2), 16)
         let green = parseInt(color.slice(2, 4), 16)
