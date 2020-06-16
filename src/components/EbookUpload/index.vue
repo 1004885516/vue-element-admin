@@ -59,6 +59,20 @@ export default {
     onSuccess (response, file) {
       console.log('response', response)
       console.log('file', file)
+      const { code, data, msg } = response
+      if (code === 200) {
+        this.$message({
+          message: msg,
+          type: 'success'
+        })
+        this.$emit('onSuccess', data) // 把上传成功的结果传递给父组件Detail
+      } else {
+        this.$message({
+          message: (`上传失败，失败原因 ${msg}` || '上传失败'),
+          type: 'error'
+        })
+        this.$emit('onError', file)
+      }
     },
     onError (err) {
       const errMsg = err.message
@@ -67,7 +81,13 @@ export default {
       })
       this.$emit('onError', err)
     },
-    onRemove () { },
+    onRemove () {
+      this.$message({
+        message: '电子书删除成功',
+        type: 'success'
+      })
+      this.$emit('onRemove')
+    },
     onExceed () {
       this.$message({
         message: '每次只能上传一本电子书',
