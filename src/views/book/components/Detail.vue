@@ -1,6 +1,7 @@
 <template>
   <el-form ref="postForm"
-           :model="postForm">
+           :model="postForm"
+           :rules="rules">
     <!-- 吸顶效果 -->
     <sticky :class-name="'sub-navbar'">
       <el-button v-if="!isEdit"
@@ -31,14 +32,16 @@
           </el-form-item>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="作者"
+              <el-form-item prop="author"
+                            label="作者"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.author"
                           placeholder="作者" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="出版社"
+              <el-form-item prop="publisher"
+                            label="出版社"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.publisher"
                           placeholder="出版社" />
@@ -47,14 +50,16 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="语言"
+              <el-form-item prop="language"
+                            label="语言"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.language"
                           placeholder="语言" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="根文件"
+              <el-form-item prop="rootFile"
+                            label="根文件"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.rootFile"
                           placeholder="根文件"
@@ -64,7 +69,8 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="文件路径"
+              <el-form-item prop="filePath"
+                            label="文件路径"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.filePath"
                           placeholder="filePath"
@@ -72,7 +78,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="解压路径"
+              <el-form-item prop="unzipPath"
+                            label="解压路径"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.unzipPath"
                           placeholder="解压路径"
@@ -82,7 +89,8 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="封面路径"
+              <el-form-item prop="coverPath"
+                            label="封面路径"
                             :label-width="labelWidth">
                 <el-input v-model="postForm.coverPath"
                           placeholder="封面路径"
@@ -90,17 +98,19 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="图片名称"
+              <el-form-item prop="originalName"
+                            label="文件名称"
                             :label-width="labelWidth">
-                <el-input v-model="postForm.fileName"
-                          placeholder="图片名称"
+                <el-input v-model="postForm.originalName"
+                          placeholder="文件名称"
                           disabled />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="封面"
+              <el-form-item prop="cover"
+                            label="封面"
                             label-width="60px">
                 <a v-if="postForm.cover"
                    :href="postForm.cover"
@@ -114,7 +124,8 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="目录"
+              <el-form-item prop="contents"
+                            label="目录"
                             label-width="60px">
                 <div v-if="postForm.contents && postForm.contents.length > 0">
                   <!-- 展示服务端返回的目录并用 el-tree 展示为树状列表 -->
@@ -137,6 +148,14 @@ import Sticky from '../../../components/Sticky'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload'
 import MdInput from '../../../components/MDinput'
+import { createBook, editBook } from '../../../api/book'
+
+const fields = {
+  title: '书名',
+  author: '作者',
+  language: '语言',
+  publisher: '出版社'
+}
 export default {
   components: {
     Sticky,
@@ -148,6 +167,13 @@ export default {
     isEdit: Boolean
   },
   data () {
+    const validateRequire = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error(fields[rule.field] + '必须填写'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: false,
       postForm: {
@@ -155,7 +181,13 @@ export default {
       },
       fileList: [],
       labelWidth: '120px',
-      contentsTree: []
+      contentsTree: [],
+      rules: {
+        title: [{ validator: validateRequire }],
+        author: [{ validator: validateRequire }],
+        language: [{ validator: validateRequire }],
+        publisher: [{ validator: validateRequire }]
+      }
     }
   },
   methods: {
@@ -179,7 +211,8 @@ export default {
         fileName,
         coverPath,
         filePath,
-        unzipPath
+        unzipPath,
+        path
       } = data
       this.postForm = {
         title,
@@ -194,19 +227,26 @@ export default {
         fileName,
         coverPath,
         filePath,
-        unzipPath
+        unzipPath,
+        path
       }
       this.fileList = [{ name: originalName, url }]
       this.contentsTree = contentsTree
     },
+    // 删除电子书，清空列表
+    setDefault () {
+      this.contentsTree = []
+      this.fileList = []
+      // 调用resetFields()方法 表单必须有prop属性
+      this.$refs.postForm.resetFields()
+    },
 
     // 接收到子组件传递过来的上传成功数据结果
     onUploadSuccess (data) {
-      console.log('data########', data)
       this.setData(data)
     },
     onUploadRemove () {
-
+      this.setDefault()
     },
     onSuccess () {
 
@@ -219,9 +259,34 @@ export default {
     },
     submitForm () {
       this.loading = true
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
+      this.$refs.postForm.validate(async (valid, fields) => {
+        if (valid) {
+          const book = Object.assign({}, this.postForm)
+          if (!this.isEdit) {
+            // 新增图书
+            book.action = 'create_book' // 服务端通过action字段判读新增或是跟新逻辑
+            createBook(book).then((res) => {
+              const { msg } = res
+              this.$notify({
+                title: '操作成功',
+                message: msg,
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+              this.setDefault()
+            }).catch(() => {
+              this.loading = false
+            })
+          } else {
+            // 编辑图书
+            editBook(book)
+          }
+        } else {
+          this.$message(fields[Object.keys(fields)[0]][0].message)
+          this.loading = false
+        }
+      })
     }
   }
 }
