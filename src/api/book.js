@@ -15,3 +15,11 @@ export function editBook (book) {
     data: book
   })
 }
+
+export function getBook (params) {
+  return request({
+    url: '/book/api',
+    method: 'post',
+    data: params
+  })
+}

@@ -148,7 +148,7 @@ import Sticky from '../../../components/Sticky'
 import Warning from './Warning'
 import EbookUpload from '../../../components/EbookUpload'
 import MdInput from '../../../components/MDinput'
-import { createBook, editBook } from '../../../api/book'
+import { createBook, editBook, getBook } from '../../../api/book'
 
 const fields = {
   title: '书名',
@@ -190,7 +190,22 @@ export default {
       }
     }
   },
+  created () {
+    if (this.isEdit) {
+      const fileName = this.$route.params.fileName
+      this.getBookData(fileName)
+    }
+  },
   methods: {
+    getBookData (fileName) {
+      const params = {
+        fileName: fileName,
+        action: 'get_one_book'
+      }
+      getBook(params).then(res => {
+        this.setData(res.data)
+      })
+    },
     onContentClick (data) {
       if (data.text) {
         window.open(data.text)
@@ -258,35 +273,37 @@ export default {
       console.log('showGuide...')
     },
     submitForm () {
-      this.loading = true
-      this.$refs.postForm.validate(async (valid, fields) => {
-        if (valid) {
-          const book = Object.assign({}, this.postForm)
-          if (!this.isEdit) {
-            // 新增图书
-            book.action = 'create_book' // 服务端通过action字段判读新增或是跟新逻辑
-            createBook(book).then((res) => {
-              const { msg } = res
-              this.$notify({
-                title: '操作成功',
-                message: msg,
-                type: 'success',
-                duration: 2000
+      if (!this.loading) {
+        this.loading = true
+        this.$refs.postForm.validate(async (valid, fields) => {
+          if (valid) {
+            const book = Object.assign({}, this.postForm)
+            if (!this.isEdit) {
+              // 新增图书
+              book.action = 'create_book' // 服务端通过action字段判读新增或是跟新逻辑
+              createBook(book).then((res) => {
+                const { msg } = res
+                this.$notify({
+                  title: '操作成功',
+                  message: msg,
+                  type: 'success',
+                  duration: 2000
+                })
+                this.loading = false
+                this.setDefault()
+              }).catch(() => {
+                this.loading = false
               })
-              this.loading = false
-              this.setDefault()
-            }).catch(() => {
-              this.loading = false
-            })
+            } else {
+              // 编辑图书
+              editBook(book)
+            }
           } else {
-            // 编辑图书
-            editBook(book)
+            this.$message(fields[Object.keys(fields)[0]][0].message)
+            this.loading = false
           }
-        } else {
-          this.$message(fields[Object.keys(fields)[0]][0].message)
-          this.loading = false
-        }
-      })
+        })
+      }
     }
   }
 }
