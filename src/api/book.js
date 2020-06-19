@@ -23,3 +23,10 @@ export function getBook (params) {
     data: params
   })
 }
+
+export function getCategory () {
+  return request({
+    url: '/book/api',
+    method: 'post'
+  })
+}

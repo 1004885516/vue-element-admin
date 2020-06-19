@@ -127,7 +127,7 @@
               <el-form-item prop="contents"
                             label="目录"
                             label-width="60px">
-                <div v-if="postForm.contents && postForm.contents.length > 0">
+                <div v-if="contentsTree && contentsTree.length > 0">
                   <!-- 展示服务端返回的目录并用 el-tree 展示为树状列表 -->
                   <el-tree :data="contentsTree"
                            @node-click="onContentClick" />
@@ -273,6 +273,16 @@ export default {
       console.log('showGuide...')
     },
     submitForm () {
+      const onSuccess = (res) => {
+        const { msg } = res
+        this.$notify({
+          title: '操作成功',
+          message: msg,
+          type: 'success',
+          duration: 2000
+        })
+        this.loading = false
+      }
       if (!this.loading) {
         this.loading = true
         this.$refs.postForm.validate(async (valid, fields) => {
@@ -282,21 +292,19 @@ export default {
               // 新增图书
               book.action = 'create_book' // 服务端通过action字段判读新增或是跟新逻辑
               createBook(book).then((res) => {
-                const { msg } = res
-                this.$notify({
-                  title: '操作成功',
-                  message: msg,
-                  type: 'success',
-                  duration: 2000
-                })
-                this.loading = false
+                onSuccess(res)
                 this.setDefault()
-              }).catch(() => {
+              }).catch((e) => {
                 this.loading = false
               })
             } else {
               // 编辑图书
-              editBook(book)
+              book.action = 'update_one_book'
+              editBook(book).then((res) => {
+                onSuccess(res)
+              }).catch((e) => {
+                this.loading = false
+              })
             }
           } else {
             this.$message(fields[Object.keys(fields)[0]][0].message)
