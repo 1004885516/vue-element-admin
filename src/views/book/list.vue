@@ -80,7 +80,11 @@
                        align="center" />
       <el-table-column label="分类"
                        width="150"
-                       align="center" />
+                       align="center">
+        <template v-slot="{row :{category}}">
+          <span>{{ category | valueFilter }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="文件名称"
                        prop="fileName"
                        width="150"
@@ -113,11 +117,19 @@
           <el-button type="text"
                      icon="el-icon-edit"
                      @click="handleUpdate(fileName)" />
+          <el-button type="text"
+                     icon="el-icon-delete"
+                     style="color: red"
+                     @click="handleDelete(fileName)" />
         </template>
       </el-table-column>
     </el-table>
     <!-- 列表底部页签 -->
-    <Pagination :total="total" />
+    <Pagination v-show="total > 0"
+                :total="total"
+                :page.sync="listQuery.pages"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getBookList" />
   </div>
 </template>
 
@@ -125,7 +137,7 @@
 
 import Pagination from '../../components/Pagination'
 import waves from '../../directive/waves'
-import { getCategory, getBookList } from '../../api/book'
+import { getCategory, getBookList, deleteOneBook } from '../../api/book'
 
 export default {
   components: {
@@ -133,6 +145,11 @@ export default {
   },
   directives: {
     waves
+  },
+  filters: {
+    valueFilter (value) {
+      return value || '暂无'
+    }
   },
   data () {
     return {
@@ -200,8 +217,28 @@ export default {
       this.$router.push('/book/create')
     },
     handleUpdate (fileName) {
-      console.log('fileName', fileName)
       this.$router.push(`/book/edit/${fileName}`)
+    },
+    handleDelete (fileName) {
+      const query = {
+        action: 'delete_one_book',
+        fileName: fileName
+      }
+      this.$confirm('此操作将永久删除电子书,是否继续?', '友情提示:', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        deleteOneBook(query).then((res) => {
+          this.$notify.success({
+            title: '成功',
+            message: res.msg || '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleFilter
+        })
+      })
     },
     changeShowCover (value) {
       this.showCover = value

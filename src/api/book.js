@@ -30,7 +30,16 @@ export function getCategory () {
     method: 'post'
   })
 }
+
 export function getBookList (query) {
+  return request({
+    url: '/book/api',
+    method: 'post',
+    data: query
+  })
+}
+
+export function deleteOneBook (query) {
   return request({
     url: '/book/api',
     method: 'post',
