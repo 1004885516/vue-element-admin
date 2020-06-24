@@ -57,8 +57,6 @@ export default {
       this.$emit('beforeUpload', file)
     },
     onSuccess (response, file) {
-      console.log('response', response)
-      console.log('file', file)
       const { code, data, msg } = response
       if (code === 200) {
         this.$message({

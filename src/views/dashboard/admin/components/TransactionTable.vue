@@ -47,9 +47,9 @@ export default {
       list: null
     }
   },
-  created () {
-    this.fetchData()
-  },
+  // created () {
+  //   this.fetchData()
+  // },
   methods: {
     fetchData () {
       transactionList().then(response => {
