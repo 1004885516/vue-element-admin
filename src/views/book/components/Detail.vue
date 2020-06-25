@@ -168,7 +168,7 @@ export default {
   },
   data () {
     const validateRequire = (rule, value, callback) => {
-      if (value.length === 0) {
+      if (!value) {
         callback(new Error(fields[rule.field] + '必须填写'))
       } else {
         callback()

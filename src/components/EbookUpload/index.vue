@@ -42,6 +42,7 @@ export default {
   },
   data () {
     return {
+      // 调用上传接口
       action: `${process.env.VUE_APP_BASE_API}/book/upload`
     }
   },
