@@ -13,7 +13,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            访客
           </div>
           <count-to :start-val="0"
                     :end-val="102400"
@@ -34,7 +34,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Messages
+            消息
           </div>
           <count-to :start-val="0"
                     :end-val="81212"
@@ -55,7 +55,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Purchases
+            购买
           </div>
           <count-to :start-val="0"
                     :end-val="9280"
@@ -76,7 +76,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Shoppings
+            购物车
           </div>
           <count-to :start-val="0"
                     :end-val="13600"

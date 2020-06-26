@@ -69,12 +69,12 @@ export default {
             }
           },
           indicator: [
-            { name: 'Sales', max: 10000 },
-            { name: 'Administration', max: 20000 },
-            { name: 'Information Technology', max: 20000 },
-            { name: 'Customer Support', max: 20000 },
-            { name: 'Development', max: 20000 },
-            { name: 'Marketing', max: 20000 }
+            { name: '销售', max: 10000 },
+            { name: '管理', max: 20000 },
+            { name: '信息', max: 20000 },
+            { name: '用户支持', max: 20000 },
+            { name: '发展', max: 20000 },
+            { name: '促销', max: 20000 }
           ]
         },
         legend: {

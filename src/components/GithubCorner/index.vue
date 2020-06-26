@@ -1,5 +1,5 @@
 <template>
-  <a href="https://github.com/PanJiaChen/vue-element-admin"
+  <a href="https://github.com/1004885516/vue-element-admin.git"
      target="_blank"
      class="github-corner"
      aria-label="View source on Github">

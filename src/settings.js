@@ -1,5 +1,5 @@
 module.exports = {
-  title: '通往罗马',
+  title: '罗盘玫瑰',
 
   /**
    * @type {boolean} true | false
