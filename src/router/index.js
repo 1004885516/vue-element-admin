@@ -80,6 +80,26 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/developer',
+    name: 'developer',
+    component: Layout,
+    meta: { title: '开发者', icon: 'user' },
+    children: [
+      {
+        name: 'deploy',
+        path: '/developer/deploy',
+        component: () => import('@/views/developer/deploy'),
+        meta: { title: '发版部署', icon: 'theme', roles: ['editor'] }
+      },
+      {
+        name: 'envbuild',
+        path: '/developer/envbuild',
+        component: () => import('@/views/developer/envbuild'),
+        meta: { title: '环境搭建', icon: 'tree-table', roles: ['editor'] }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

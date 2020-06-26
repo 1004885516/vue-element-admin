@@ -154,7 +154,7 @@ export default {
   data () {
     return {
       listQuery: {},
-      showCover: false,
+      showCover: true,
       categoryList: [],
       tableKey: 0,
       listLoading: true,
