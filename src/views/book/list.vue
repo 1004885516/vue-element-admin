@@ -56,7 +56,6 @@
       </el-table-column>
       <el-table-column label="ID"
                        prop="_id"
-                       sortable="custom"
                        align="center"
                        width="204px" />
       <el-table-column label="书名"
@@ -107,6 +106,7 @@
                        align="center" />
       <el-table-column label="上传时间"
                        prop="createTime"
+                       sortable="custom"
                        width="150"
                        align="center" />
       <el-table-column label="操作"
@@ -198,12 +198,25 @@ export default {
     parseQuery () {
       const listQuery = {
         pages: 1,
-        pageSize: 10
+        pageSize: 10,
+        sortQuery: {}
       }
       this.listQuery = { ...listQuery, ...this.listQuery }
     },
     sortChange (data) {
-      console.log('sortChange', data)
+      const { prop, order } = data
+      this.sortBy(prop, order)
+    },
+    sortBy (prop, order) {
+      const sortQuery = {}
+      if (order === 'ascending') {
+        sortQuery[prop] = 1
+        this.listQuery.sortQuery = sortQuery
+      } else {
+        sortQuery[prop] = -1
+        this.listQuery.sortQuery = sortQuery
+      }
+      this.handleFilter()
     },
     getCategoryList () {
       getCategory().then(() => {
